@@ -17,7 +17,6 @@ A full-stack **MERN** notes application with user authentication, built using **
   - Delete notes  
   - View all notes  
 
-- **Responsive UI**
-  - Clean, minimal interface with Tailwind CSS and DaisyUI  
-  - Works seamlessly on desktop and mobile  
+## Live Demo
+- Check out the live version of my Notes_Application here:[Notes_Application](https://notes-application-bdnk.onrender.com)
 
