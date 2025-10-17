@@ -1,0 +1,34 @@
+const logger=require('./logger')
+ const errorhandler=(error,request,response,next)=>{
+     console.error(error.message)
+
+     if(error.name==='CastError'){
+       return response.status(400).send({error:'malformatted IDs'})
+     }
+     else if(error.name==='ValidationError'){
+       return response.status(400).send({error:error.message})
+     }
+     else if(error.name==='MongoServerError' && error.message.includes('E11000 duplicate key error')){
+       return response.status(400).json({error:'expected `username` to be unique'})
+     }
+     else if(error.name==='JsonWebTokenError'){
+      return response.status(401).json({error:'token invalid'})
+     }
+     else if(error.name==='TokenExpiredError'){
+      response.status(401).json({error:'token expired'})
+     }
+
+     next(error)
+ }
+
+ const unknownendpoint=(request,response)=>{
+    response.status(404).send({error:'unknown endpoint'})
+ }
+const requestLogger = (request, response, next) => {
+  logger.info('Method:', request.method)
+  logger.info('Path:  ', request.path)
+  logger.info('Body:  ', request.body)
+  logger.info('---')
+  next()
+}
+module.exports={errorhandler,unknownendpoint,requestLogger}
