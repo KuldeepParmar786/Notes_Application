@@ -1,6 +1,7 @@
 const usersRouter=require('express').Router()
 const User=require('../model/user')
 const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 
 usersRouter.post('/',async(request,response)=>{
     const {username,name,password}=request.body
@@ -14,8 +15,15 @@ usersRouter.post('/',async(request,response)=>{
      })
    
    const savedUser = await newUser.save()
-   console.log('User Saved')
-   response.status(201).json(savedUser)
+   const userforToken={
+        username:savedUser.username,
+        id:savedUser._id
+      }
+   
+      const token=jwt.sign(userforToken,process.env.SECRET,{expiresIn:7*24*60*60})
+      response
+      .status(200)
+      .send({token:token,username:savedUser.username,name:savedUser.name,userId:savedUser._id})
     
 })
 
